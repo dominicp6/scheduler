@@ -46,6 +46,6 @@ class Schedule(object):
             self.update_remaining_hours(time)
             bisect.insort(self.schedule, (time, task))
 
-    def execute(self, day):
+    def execute(self, day, verbose=False):
         for (time, task) in self.schedule:
-            task.work(time[1]-time[0], day)
+            task.work(time[1]-time[0], day, verbose=verbose)

@@ -38,7 +38,7 @@ class Task(object):
                f"priority {self.priority}, due {self.due_date}, " \
                f"importance {round(self.compute_importance(datetime.now()), 2)}))"
 
-    def work(self, hours: float, current_time: datetime):
+    def work(self, hours: float, current_time: datetime, verbose: bool = False):
         self.hours_remaining = round(self.hours_remaining - hours, 1)
         if self.status == "Not Started":
             self.status = "In Progress"
@@ -47,10 +47,7 @@ class Task(object):
         if (self.due_date - current_time).days <= 0 and self.status != "Completed":
             self.status = "Overdue"
 
-        if self.hours_remaining > 0:
-            print(self.hours_remaining, "larger than 0")
-
-        if hours > 0:
+        if hours > 0 and verbose:
             if (self.due_date - current_time).days <= 3:
                 due_in = (self.due_date - current_time).days
                 print(f"{self.name} worked on for {hours} hours. {self.hours_remaining} hours remaining. "

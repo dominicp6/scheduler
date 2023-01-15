@@ -15,7 +15,8 @@ if __name__ == '__main__':
         print("Please enter the number of the option you would like to choose:")
         print("1. Create a new task")
         print("2. Show today's schedule")
-        print("3. Show all tasks")
+        print("3. Show this week's schedule")
+        print("4. Show all tasks")
         print("0. Execute today's schedule")
         option = input("Option: ")
         if option == "1":
@@ -46,6 +47,16 @@ if __name__ == '__main__':
             input()
             os.system('cls' if os.name == 'nt' else 'clear')
         elif option == "3":
+            print("Showing this week's schedule...")
+            today = datetime.datetime.today()
+            scheduler = TaskScheduler(task_list, working_hours={'weekday': ((9, 12), (13, 17)), 'weekend': ((10, 12), (13, 16))})
+            schedules = scheduler.schedule_week()
+            for date, schedule in schedules.items():
+                print(f"Schedule for {date.strftime('%A, %d %B %Y')}:")
+                print(schedule)
+            input()
+            os.system('cls' if os.name == 'nt' else 'clear')
+        elif option == "4":
             print("Showing all tasks...")
             for task in task_list.tasks:
                 print(task)

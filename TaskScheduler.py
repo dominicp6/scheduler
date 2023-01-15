@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime, timedelta
+from copy import deepcopy
 
 from Task import Task
 from TaskList import TaskList
@@ -20,6 +21,8 @@ class TaskScheduler(object):
         return day
 
     def _hours_remaining(self, timeslot: tuple[float, float]):
+        if timeslot is None:
+            return 0
         return timeslot[1] - timeslot[0]
 
     def schedule_task(self,
@@ -55,6 +58,23 @@ class TaskScheduler(object):
     def schedule_today(self):
         return self.schedule_day(datetime.today())
 
+    def schedule_week(self):
+        # Create a copy of the task list
+        task_list = deepcopy(self.task_list)
+
+        # Create a schedule for each day of the week
+        schedules = {}
+        for day in range(7):
+            date = datetime.today() + timedelta(days=day)
+            schedules[date] = self.schedule_day(date)
+            # Execute the tasks in the schedule
+            schedules[date].execute(date)
+
+        # Restore the task list
+        self.task_list = task_list
+
+        return schedules
+
     def schedule_day(self, day: datetime):
         day_type = self._get_day_type(day)
         tasks = self.task_list.get_tasks_by_importance(day)
@@ -68,12 +88,12 @@ class TaskScheduler(object):
 
             # Schedule morning tasks
             if self._hours_remaining(morning_hours) > 0 and "morning" in task.preferred_times[day_type]:
-                self.schedule_task(task, schedule, morning_hours)
+                morning_hours = self.schedule_task(task, schedule, morning_hours)
                 continue
             # Schedule afternoon tasks
             else:
                 if self._hours_remaining(afternoon_hours) > 0 and "afternoon" in task.preferred_times[day_type]:
-                    self.schedule_task(task, schedule, afternoon_hours)
+                    afternoon_hours = self.schedule_task(task, schedule, afternoon_hours)
                     continue
 
             # Break if no more hours available
