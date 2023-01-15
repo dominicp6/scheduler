@@ -1,3 +1,5 @@
+import bisect
+
 from Task import Task
 
 
@@ -9,21 +11,21 @@ class Schedule(object):
 
     def __str__(self):
         string = "=======================================================================\n"
-        for (task, time) in self.schedule:
+        for (time, task) in self.schedule:
             string += f"{task.name} at {time}\n"
         string += "=======================================================================\n"
         string += "\n"
 
         return string
 
-    def is_available(self, time: tuple[int, int]):
+    def is_available(self, time: tuple[float, float]):
         for timeslot in self.remaining_hours:
             if time[0] >= timeslot[0] and time[1] <= timeslot[1]:
                 return True
 
         return False
 
-    def update_remaining_hours(self, time: tuple[int, int]):
+    def update_remaining_hours(self, time: tuple[float, float]):
         for idx, timeslot in enumerate(self.remaining_hours):
             if time[0] == timeslot[0] and time[1] == timeslot[1]:
                 del self.remaining_hours[idx]
@@ -39,11 +41,11 @@ class Schedule(object):
                 self.remaining_hours.insert(idx+1, [time[1], timeslot[1]])
                 break
 
-    def add_task(self, task: Task, time: tuple[int, int]):
+    def add_task(self, task: Task, time: tuple[float, float]):
         if self.is_available(time):
             self.update_remaining_hours(time)
-            self.schedule.append((task, time))
+            bisect.insort(self.schedule, (time, task))
 
     def execute(self, day):
-        for (task, time) in self.schedule:
+        for (time, task) in self.schedule:
             task.work(time[1]-time[0], day)

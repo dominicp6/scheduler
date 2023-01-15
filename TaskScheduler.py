@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from Task import Task
 from TaskList import TaskList
 from Schedule import Schedule
 
@@ -18,49 +19,65 @@ class TaskScheduler(object):
 
         return day
 
+    def _hours_remaining(self, timeslot: tuple[float, float]):
+        return timeslot[1] - timeslot[0]
+
+    def schedule_task(self,
+                      task: Task,
+                      schedule: Schedule,
+                      timeslot: tuple[float, float]):
+
+        assert timeslot is not None
+        timeslot_hours_remaining = timeslot[1] - timeslot[0]
+        assert timeslot_hours_remaining > 0
+
+        if task.hours_remaining >= timeslot_hours_remaining:
+            if task.max_time_working >= timeslot_hours_remaining:
+                # Schedule task for the remaining time in the timeslot
+                schedule.add_task(task, (timeslot[0], timeslot[1]))
+                timeslot = None
+            else:
+                # Schedule task for the max time working
+                schedule.add_task(task, (timeslot[0], timeslot[0] + task.max_time_working))
+                timeslot = (timeslot[0] + task.max_time_working, timeslot[1])
+        else:
+            if task.hours_remaining >= task.max_time_working:
+                # Schedule task for the max time working
+                schedule.add_task(task, (timeslot[0], timeslot[0] + task.max_time_working))
+                timeslot = (timeslot[0] + task.max_time_working, timeslot[1])
+            else:
+                # Schedule task for the remaining hours
+                schedule.add_task(task, (timeslot[0], timeslot[0] + task.hours_remaining))
+                timeslot = (timeslot[0] + task.hours_remaining, timeslot[1])
+
+        return timeslot
+
     def schedule_today(self):
         return self.schedule_day(datetime.today())
 
     def schedule_day(self, day: datetime):
         day_type = self._get_day_type(day)
         tasks = self.task_list.get_tasks_by_importance(day)
-        [print(task) for task in tasks]
         available_hours = [list(timeslot) for timeslot in self.working_hours[day_type]]
         morning_hours = (available_hours[0][0], available_hours[0][1])
         afternoon_hours = (available_hours[1][0], available_hours[1][1])
-        morning_hours_remaining = available_hours[0][1] - available_hours[0][0]
-        afternoon_hours_remaining = available_hours[1][1] - available_hours[1][0]
         schedule = Schedule(available_hours=available_hours)
         for task in tasks:
             if task.status == "Completed":
                 continue
 
             # Schedule morning tasks
-            if morning_hours_remaining > 0:
-                if (task.hours_remaining > 10 and "afternoon" not in task.preferred_times[day_type]) \
-                        or ("morning" in task.preferred_times[day_type]):
-                    if task.hours_remaining >= morning_hours_remaining:
-                        schedule.add_task(task, (morning_hours[0], morning_hours[1]))
-                        morning_hours_remaining, morning_hours = 0, None
-                    elif task.hours_remaining < morning_hours_remaining:
-                        schedule.add_task(task, (morning_hours[0], morning_hours[0] + task.hours_remaining))
-                        morning_hours = (morning_hours[0] + task.hours_remaining, morning_hours[1])
-                        morning_hours_remaining -= task.hours_remaining
-                        continue
-                    else:
-                        continue
+            if self._hours_remaining(morning_hours) > 0 and "morning" in task.preferred_times[day_type]:
+                self.schedule_task(task, schedule, morning_hours)
+                continue
             # Schedule afternoon tasks
             else:
-                if afternoon_hours_remaining > 0:
-                    if task.hours_remaining >= afternoon_hours_remaining:
-                        schedule.add_task(task, (afternoon_hours[0], afternoon_hours[1]))
-                        afternoon_hours_remaining, afternoon_hours = 0, None
-                    elif task.hours_remaining < afternoon_hours_remaining:
-                        schedule.add_task(task, (afternoon_hours[0], afternoon_hours[0] + task.hours_remaining))
-                        afternoon_hours = (afternoon_hours[0] + task.hours_remaining, afternoon_hours[1])
-                        afternoon_hours_remaining -= task.hours_remaining
-                        continue
-                    else:
-                        continue
+                if self._hours_remaining(afternoon_hours) > 0 and "afternoon" in task.preferred_times[day_type]:
+                    self.schedule_task(task, schedule, afternoon_hours)
+                    continue
+
+            # Break if no more hours available
+            if self._hours_remaining(morning_hours) == 0 and self._hours_remaining(afternoon_hours) == 0:
+                break
 
         return schedule

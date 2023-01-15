@@ -7,28 +7,31 @@ class Task(object):
                  priority: int,
                  due_date: datetime,
                  hours: float,
-                 task_type: str = None,
-                 preferred_times: dict[str, tuple[set[str]]] = None):
+                 task_type: str,
+                 status: str = "Not Started"):
         self.name = name
         self.priority = priority
         self.due_date = due_date
-        self.hours_remaining = hours
-        self.status = "Not Started"
+        self.hours_remaining = round(hours, 1)
+        self.status = status
         self.task_type = task_type
-        if self.task_type is not None and preferred_times is None:
-            if self.task_type == "reading":
-                self.preferred_times = {'weekday': ('afternoon',), 'weekend': ('afternoon',)}
-            elif self.task_type == "writing":
-                self.preferred_times = {'weekday': ('morning',), 'weekend': ('morning',)}
-            elif self.task_type == "coding":
-                self.preferred_times = {'weekday': ('morning', 'afternoon'), 'weekend': ()}
-            elif self.task_type == "research":
-                self.preferred_times = {'weekday': ('morning',), 'weekend': ()}
-            elif self.task_type == "extra":
-                self.preferred_times = {'weekday': ('afternoon',), 'weekend': ('morning', 'afternoon')}
+        if self.task_type == "reading":
+            self.preferred_times = {'weekday': ('afternoon',), 'weekend': ('afternoon',)}
+            self.max_time_working = 1  # reading should be done in short bursts
+        elif self.task_type == "writing":
+            self.preferred_times = {'weekday': ('morning',), 'weekend': ('morning',)}
+            self.max_time_working = 2  # writing can be done in longer bursts
+        elif self.task_type == "coding":
+            self.preferred_times = {'weekday': ('morning', 'afternoon'), 'weekend': ()}
+            self.max_time_working = 3  # coding projects can be done for up to 3 hours at a time
+        elif self.task_type == "research":
+            self.preferred_times = {'weekday': ('morning',), 'weekend': ()}
+            self.max_time_working = 3  # research projects can be done for up to 3 hours at a time
+        elif self.task_type == "extra":
+            self.preferred_times = {'weekday': ('afternoon',), 'weekend': ('morning', 'afternoon')}
+            self.max_time_working = 2  # extra projects can be done for up to 2 hours at a time
         else:
-            self.preferred_times = preferred_times if preferred_times else {'weekday': ('morning', 'afternoon'),
-                                                                            'weekend': ('morning', 'afternoon')}
+            raise ValueError("Task type must be one of the following: 'reading', 'writing', 'coding', 'research', 'extra'")
 
     def __str__(self):
         return f"{self.name} ({self.status} - {self.hours_remaining} hours remaining, " \
@@ -36,13 +39,16 @@ class Task(object):
                f"importance {round(self.compute_importance(datetime.now()), 2)}))"
 
     def work(self, hours: float, current_time: datetime):
-        self.hours_remaining -= hours
+        self.hours_remaining = round(self.hours_remaining - hours, 1)
         if self.status == "Not Started":
             self.status = "In Progress"
         if self.hours_remaining <= 0:
             self.status = "Completed"
-        if (self.due_date - current_time).days <= 0:
+        if (self.due_date - current_time).days <= 0 and self.status != "Completed":
             self.status = "Overdue"
+
+        if self.hours_remaining > 0:
+            print(self.hours_remaining, "larger than 0")
 
         if hours > 0:
             if (self.due_date - current_time).days <= 3:
