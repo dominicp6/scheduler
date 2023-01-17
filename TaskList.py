@@ -13,6 +13,9 @@ class TaskList(object):
         for task in self.tasks:
             print(task)
 
+    def get(self, id: int):
+        return self.tasks[id]
+
     def add(self, task: Task):
         self.tasks.append(task)
 
