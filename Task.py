@@ -34,13 +34,13 @@ class Task(object):
             raise ValueError("Task type must be one of the following: 'reading', 'writing', 'coding', 'research', 'extra'")
 
     def __str__(self):
-        return f"{self.name} ({self.status} - {self.hours_remaining} hours remaining, " \
+        return f"{self.name} ({self.status.rstrip()} - {self.hours_remaining} hours remaining, " \
                f"priority {self.priority}, due {self.due_date}, " \
                f"importance {round(self.compute_importance(datetime.now()), 2)}))"
 
     def work(self, hours: float, current_time: datetime, verbose: bool = False):
         self.hours_remaining = round(self.hours_remaining - hours, 1)
-        if self.status == "Not Started":
+        if self.status.rstrip() == "Not Started" and hours > 0:
             self.status = "In Progress"
         if self.hours_remaining <= 0:
             self.status = "Completed"

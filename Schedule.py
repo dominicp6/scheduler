@@ -1,6 +1,7 @@
 import bisect
 
 from Task import Task
+from utils import get_input
 
 
 class Schedule(object):
@@ -46,6 +47,10 @@ class Schedule(object):
             self.update_remaining_hours(time)
             bisect.insort(self.schedule, (time, task))
 
-    def execute(self, day, verbose=False):
+    def execute(self, day, verbose=False, interactive=False):
         for (time, task) in self.schedule:
-            task.work(time[1]-time[0], day, verbose=verbose)
+            if interactive:
+                hours = get_input(f"> How many hours did you work on {task.name}? ({task.hours_remaining} remaining): ", float)
+                task.work(hours, day, verbose=verbose)
+            else:
+                task.work(time[1]-time[0], day, verbose=verbose)
