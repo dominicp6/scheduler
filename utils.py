@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from Task import Task
+from Event import Event
 
 
 def get_input(prompt: str, expected_type: type, options: list = None):
@@ -43,5 +44,26 @@ def save_tasks_to_file(file_path: str, tasks: list[Task]):
     with open(file_path, "w") as file:
         for task in tasks:
             line = f"{task.name},{task.priority},{task.hours_remaining},{task.due_date.strftime('%d/%m/%Y')},{task.task_type},{task.status}"
+            line = line.rstrip()
+            print(line, file=file)
+
+
+def load_events_from_file(file_path: str):
+    with open(file_path, "r") as file:
+        events = []
+        for line in file:
+            event = line.split(",")
+            events.append(Event(name=event[0],
+                                date=datetime.strptime(event[1], "%d/%m/%Y"),
+                                start_time=float(event[2]),
+                                end_time=float(event[3]),
+                                g_calender_event=eval(event[4])))
+        return events
+
+
+def save_events_to_file(file_path: str, events: list[Event]):
+    with open(file_path, "w") as file:
+        for event in events:
+            line = f"{event.name},{event.date.strftime('%d/%m/%Y')},{event.start_time},{event.end_time},{event.g_calender_event}"
             line = line.rstrip()
             print(line, file=file)
