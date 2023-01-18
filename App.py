@@ -1,4 +1,5 @@
 import os
+import json
 from datetime import datetime, timedelta
 from copy import deepcopy
 
@@ -132,10 +133,28 @@ class App:
     def sync_with_google_calendar(self):
         print("Syncing with Google Calendar...")
         from google.oauth2.credentials import Credentials
+        from google_auth_oauthlib.flow import InstalledAppFlow
         from googleapiclient.discovery import build
 
+        with open('/home/dominic/PycharmProjects/scheduler/auth/client_secret.json') as file:
+            creds_data = json.load(file)
+
+        # Create an OAuth2 flow
+        flow = InstalledAppFlow.from_client_config(
+            client_config=creds_data,
+            scopes=['https://www.googleapis.com/auth/calendar']
+        )
+
+        # Run the flow to obtain the refresh token
+        flow.run_local_server()
+
+        # Save the refresh token to a file
+        creds = flow.credentials
+        with open('path/to/token.json', 'w') as f:
+            f.write(creds.to_json())
+
         # Use the application default credentials
-        creds = Credentials.get_application_default()
+        creds = Credentials.from_authorized_user_file('/home/dominic/PycharmProjects/scheduler/auth/token.json')
         service = build('calendar', 'v3', credentials=creds)
 
         # Get the events for the next week

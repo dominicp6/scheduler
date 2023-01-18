@@ -54,7 +54,7 @@ class TaskScheduler(object):
     def get_available_timeslots(self, day: datetime):
         day_type = self._get_day_type(day)
         available_hours = [list(timeslot) for timeslot in self.working_hours[day_type]]
-        events = self.event_list.get_events_by_day(day)
+        events = self.event_list.get_events_by_date(day)
 
         # Adjust available hours based on events
         for event in events:
