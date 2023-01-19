@@ -20,7 +20,7 @@ class EventList(object):
         self.events.append(event)
 
     def get_events_by_date(self, date):
-        return [event for event in self.events if event.date == date]
+        return [event for event in self.events if event.date.date == date.date]
 
     def get_events_by_name(self, name):
         return [event for event in self.events if event.name == name]

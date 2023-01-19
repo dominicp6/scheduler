@@ -27,11 +27,14 @@ class Task(object):
         elif self.task_type == "research":
             self.preferred_times = {'weekday': ('morning',), 'weekend': ()}
             self.max_time_working = 3  # research projects can be done for up to 3 hours at a time
+        elif self.task_type == "admin":
+            self.preferred_times = {'weekday': ('morning','afternoon'), 'weekend': ('morning', 'afternoon')}
+            self.max_time_working = 1  # admin tasks can be done in short bursts
         elif self.task_type == "extra":
             self.preferred_times = {'weekday': ('afternoon',), 'weekend': ('morning', 'afternoon')}
             self.max_time_working = 2  # extra projects can be done for up to 2 hours at a time
         else:
-            raise ValueError("Task type must be one of the following: 'reading', 'writing', 'coding', 'research', 'extra'")
+            raise ValueError("Task type must be one of the following: 'reading', 'writing', 'coding', 'research', 'admin', 'extra'")
 
     def __str__(self):
         return f"{self.name} ({self.status.rstrip()} - {self.hours_remaining} hours remaining, " \

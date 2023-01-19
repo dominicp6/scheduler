@@ -2,8 +2,10 @@ import os
 import json
 from datetime import datetime, timedelta
 from copy import deepcopy
+from pprint import pprint
 
 import pytz
+from dateutil import parser
 
 from Task import Task
 from Event import Event
@@ -136,7 +138,7 @@ class App:
         from google_auth_oauthlib.flow import InstalledAppFlow
         from googleapiclient.discovery import build
 
-        with open('/home/dominic/PycharmProjects/scheduler/auth/client_secret.json') as file:
+        with open('./auth/client_secret.json') as file:
             creds_data = json.load(file)
 
         # Create an OAuth2 flow
@@ -150,18 +152,19 @@ class App:
 
         # Save the refresh token to a file
         creds = flow.credentials
-        with open('path/to/token.json', 'w') as f:
+        with open('./auth/token.json', 'w') as f:
             f.write(creds.to_json())
 
         # Use the application default credentials
-        creds = Credentials.from_authorized_user_file('/home/dominic/PycharmProjects/scheduler/auth/token.json')
+        creds = Credentials.from_authorized_user_file('./auth/token.json')
         service = build('calendar', 'v3', credentials=creds)
 
         # Get the events for the next week
         timezone = pytz.timezone("Europe/London")
         now = datetime.now(timezone).isoformat() 
-        end_of_week = (datetime.now() + timedelta(days=7)).isoformat() 
-        events_result = service.events().list(calendarId='primary', timeMin=now,
+        end_of_week = (datetime.now(timezone) + timedelta(days=7)).isoformat() 
+        
+        events_result = service.events().list(calendarId='dom.phillips97@gmail.com', timeMin=now,
                                               timeMax=end_of_week, singleEvents=True,
                                               orderBy='startTime').execute()
         events = events_result.get('items', [])
@@ -171,8 +174,16 @@ class App:
         if not events:
             print('No upcoming events found.')
         for event in events:
-            start = datetime.fromisoformat(event['start'].get('dateTime', event['start'].get('date')))
-            end = datetime.fromisoformat(event['end'].get('dateTime', event['end'].get('date')))
-            self.event_list.add_event(Event(event['summary'], start, end))
+            start = parser.parse(event['start'].get('dateTime', event['start'].get('date')))
+            end = parser.parse(event['end'].get('dateTime', event['end'].get('date')))
+            date = start.date()
+            start_hour = start.hour + (start.minute / 60)
+            end_hour = end.hour + (end.minute / 60)
+            self.event_list.add(Event(event['summary'], date, start_hour, end_hour, g_calender_event=True))
+
+        print("Found the following events in the coming week:")
+        for event in self.event_list.events:
+            print(event)
+        save_events_to_file("./data/events.txt", self.event_list.events)
 
         self.finish()

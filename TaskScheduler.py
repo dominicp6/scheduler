@@ -69,6 +69,8 @@ class TaskScheduler(object):
                     available_hours[i] = [timeslot[0], event_start]
                     available_hours.append([event_end, timeslot[1]])
 
+        print(available_hours)
+
         return available_hours
 
     def schedule_task(self,
