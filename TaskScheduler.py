@@ -51,7 +51,7 @@ class TaskScheduler(object):
 
         return timeslots
 
-    def get_available_timeslots(self, day: datetime):
+    def get_events_and_available_timeslots(self, day: datetime):
         day_type = self._get_day_type(day)
         available_hours = [list(timeslot) for timeslot in self.working_hours[day_type]]
         events = self.event_list.get_events_by_date(day)
@@ -69,9 +69,7 @@ class TaskScheduler(object):
                     available_hours[i] = [timeslot[0], event_start]
                     available_hours.append([event_end, timeslot[1]])
 
-        print(available_hours)
-
-        return available_hours
+        return events, available_hours
 
     def schedule_task(self,
                       task: Task,
@@ -126,9 +124,11 @@ class TaskScheduler(object):
     def schedule_day(self, day: datetime):
         day_type = self._get_day_type(day)
         tasks = self.task_list.get_tasks_by_importance(day)
-        available_hours = self.get_available_timeslots(day)
+        events, available_hours = self.get_events_and_available_timeslots(day)
         morning_hours, afternoon_hours = self._classify_timeslots(available_hours)
-        schedule = Schedule(available_hours=available_hours)
+        schedule = Schedule(date=day, available_hours=available_hours)
+        [schedule.add_event(event) for event in events]
+
         # TODO: Deal with edge cases e.g. after the loop there are still available hours and available tasks
         for task in tasks:
             if task.status == "Completed":

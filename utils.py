@@ -3,18 +3,31 @@ from datetime import datetime
 from Task import Task
 from Event import Event
 
+class bcolors:
+    HEADER = '\033[95m'
+    BLUE = '\033[94m'
+    CYAN = '\033[96m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[33m'
+    RED = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
-def get_input(prompt: str, expected_type: type, options: list = None):
+def get_input(prompt: str, expected_type: type, options: list = None, allow_quit: bool = False):
     while True:
+        input_string = input(prompt)
+        if allow_quit and input_string == "q":
+            return None
         try:
             if expected_type is datetime:
                 try:
-                    user_input = datetime.strptime(input(prompt), "%d/%m/%Y")
+                    user_input = datetime.strptime(input_string, "%d/%m/%Y")
                 except ValueError:
                     print("Please enter a date in the format DD/MM/YYYY")
                     continue
             else:
-                user_input = expected_type(input(prompt))
+                user_input = expected_type(input_string)
             if options is not None and (user_input not in options):
                 raise ValueError
             break

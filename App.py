@@ -12,6 +12,7 @@ from Event import Event
 from TaskList import TaskList
 from EventList import EventList
 from TaskScheduler import TaskScheduler
+from TaskManager import TaskManager
 from utils import get_input, load_tasks_from_file, save_tasks_to_file, load_events_from_file, save_events_to_file
 
 
@@ -35,13 +36,13 @@ class App:
         self.clear()
     
     def _init_message(self):
-        print("Welcome to the Task Scheduler! [alpha v1.0]")
+        print("Welcome to the Task Scheduler! [alpha v1.1]")
         print("[n] Create new task")
         print("[t] Show today's schedule")
         print("[w] Show week's schedule")
         print("[a] Show all tasks")
         print("[e] Execute today's schedule")
-        print("[0] Execute single task")
+        print("[m] Manage tasks")
         print("[s] Sync with Google Calendar")
         print("[q] Quit")
 
@@ -59,8 +60,8 @@ class App:
                 self.show_all_tasks()
             elif option == "e":
                 self.execute_todays_schedule()
-            elif option == "0":
-                self.execute_single_task()
+            elif option == "m":
+                self.manage_tasks()
             elif option == "s":
                 self.sync_with_google_calendar()
             elif option == "q":
@@ -121,15 +122,8 @@ class App:
         print("Done!")
         self.finish()
 
-    def execute_single_task(self):
-        print("Executing a single task...")
-        task_id = get_input("Task ID: ", int)
-        task = self.task_list.get(task_id)
-        print("Executing...")
-        hours = get_input(f"> How many hours did you work on {task.name}? ({task.hours_remaining} remaining): ", float)
-        task.work(hours, self.today, verbose=True)
-        save_tasks_to_file("./data/tasks.txt", self.task_list.tasks)
-        print("Done!")
+    def manage_tasks(self):
+        TaskManager(self.task_list)
         self.finish()
 
     def sync_with_google_calendar(self):

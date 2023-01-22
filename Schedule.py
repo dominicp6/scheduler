@@ -1,19 +1,36 @@
 import bisect
+from datetime import datetime, timedelta
 
 from Task import Task
-from utils import get_input
+from utils import get_input, bcolors
 
 
 class Schedule(object):
-    def __init__(self, available_hours: list[list[int]]):
+    def __init__(self, date: datetime, available_hours: list[list[int]]):
+        self.date = date
         self.available_hours = available_hours
         self.remaining_hours = available_hours
         self.schedule = []
 
     def __str__(self):
+        dividing_bar = False
         string = "=======================================================================\n"
         for (time, task) in self.schedule:
-            string += f"{task.name} at {time}\n"
+            if time[0] > 12 and not dividing_bar:
+                string += "-----------------------------------------------------------------------\n"
+                dividing_bar = True
+            days_remaining = (task.due_date - self.date).days + 1
+            if days_remaining < 0:
+                string += f"{task.name} at {time} {bcolors.RED}[Overdue]{bcolors.ENDC}\n"
+            elif days_remaining <=2:
+                if days_remaining == 0:
+                    string += f"{task.name} at {time} {bcolors.YELLOW}[Due Today]{bcolors.ENDC}\n"
+                elif days_remaining == 1:
+                    string += f"{task.name} at {time} {bcolors.YELLOW}[Due Tomorrow]{bcolors.ENDC}\n"
+                elif days_remaining == 2:
+                    string += f"{task.name} at {time} {bcolors.YELLOW}[Due {task.due_date.strftime('%A')}]{bcolors.ENDC}\n"
+            else:
+                string += f"{task.name} at {time}\n"
         string += "=======================================================================\n"
         string += "\n"
 
@@ -46,6 +63,11 @@ class Schedule(object):
         if self.is_available(time):
             self.update_remaining_hours(time)
             bisect.insort(self.schedule, (time, task))
+
+    def add_event(self, event, time: tuple[float, float]):
+        if self.is_available(time):
+            self.update_remaining_hours(time)
+            bisect.insort(self.schedule, (time, event))
 
     def execute(self, day, verbose=False, interactive=False):
         for (time, task) in self.schedule:
