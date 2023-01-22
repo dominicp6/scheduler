@@ -36,7 +36,7 @@ class App:
         self.clear()
     
     def _init_message(self):
-        print("Welcome to the Task Scheduler! [alpha v1.1]")
+        print("Welcome to the Task Scheduler! [alpha v1.2]")
         print("[n] Create new task")
         print("[t] Show today's schedule")
         print("[w] Show week's schedule")
