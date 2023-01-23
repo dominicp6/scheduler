@@ -1,10 +1,8 @@
-Fokker-Planck equation for Hummer Modification,1,1.2,22/01/2023,research,In Progress
+Fokker-Planck equation for Hummer Modification,1,1.2,22/01/2023,research,Overdue
 Gabriel Reading VAMPnet Integration,2,3.2,27/01/2023,reading,In Progress
 Read and understand Matthew's notes,3,4.0,27/01/2023,reading,Not Started
 Read paper from reading list,3,12.0,01/03/2023,reading,Not Started
-TICA CV enhanced sampling alanine dipeptide,1,1.8,23/01/2023,coding,In Progress
-TICA CV enhanced sampling Chignolin,2,2.0,22/01/2023,coding,In Progress
-TICA CV enhanced sampling Deca Alanine,3,5.0,27/01/2023,coding,Not Started
+TICA CV enhanced sampling Deca Alanine,3,4.5,27/01/2023,coding,In Progress
 Periodic table of patterns,2,4.0,01/02/2023,extra,In Progress
 Practice PRISM presentation,2,1.5,20/02/2023,extra,Not Started
 IR Project: Spectra Comparison,2,3.0,20/02/2023,research,Not Started

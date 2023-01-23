@@ -1,0 +1,5 @@
+Ethan essay,24/01/2023,8.0,9.5,True
+Dominic CDT Meeting,24/01/2023,16.0,17.0,True
+George,24/01/2023,20.0,21.0,True
+Student Hair Cut,25/01/2023,10.5,11.0,True
+Git Tutorial,27/01/2023,9.5,10.5,True
