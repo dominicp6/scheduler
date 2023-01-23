@@ -19,8 +19,8 @@ class EventList(object):
     def add(self, event: Event):
         self.events.append(event)
 
-    def get_events_by_date(self, date):
-        return [event for event in self.events if event.date.date == date.date]
+    def get_events_by_day(self, day: datetime):
+        return [event for event in self.events if event.date.date() == day.date()]
 
-    def get_events_by_name(self, name):
+    def get_events_by_name(self, name: str):
         return [event for event in self.events if event.name == name]

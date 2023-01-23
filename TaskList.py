@@ -25,8 +25,8 @@ class TaskList(object):
     def get_tasks_by_status(self, status: str):
         return [task for task in self.tasks if task.status == status]
 
-    def get_tasks_by_date(self, date):
-        return [task for task in self.tasks if task.due_date == date]
+    def get_tasks_by_day(self, day: datetime):
+        return [task for task in self.tasks if task.due_date.date() == day.date()]
 
     def get_tasks_by_name(self, name):
         return [task for task in self.tasks if task.name == name]
