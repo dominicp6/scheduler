@@ -13,8 +13,11 @@ class TaskList(object):
         for task in self.tasks:
             print(task)
 
-    def get(self, id: int):
-        return self.tasks[id]
+    def __delitem__(self, key):
+        del self.tasks[key]
+
+    def get(self, idx: int):
+        return self.tasks[idx]
 
     def add(self, task: Task):
         self.tasks.append(task)

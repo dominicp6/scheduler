@@ -1,5 +1,11 @@
-Ethan essay,24/01/2023,8.0,9.5,True
-Dominic CDT Meeting,24/01/2023,16.0,17.0,True
-George,24/01/2023,20.0,21.0,True
-Student Hair Cut,25/01/2023,10.5,11.0,True
-Git Tutorial,27/01/2023,9.5,10.5,True
+ML4H,20/02/2023,13.0,14.5,True
+PRISM talk in group meeting,21/02/2023,11.0,12.0,True
+Dominic CDT Meeting,21/02/2023,16.0,17.0,True
+George,21/02/2023,20.0,21.0,True
+Ben Group Meeting 4.47,22/02/2023,11.5,14.0,True
+Yan tutoring,23/02/2023,8.0,9.0,True
+Victor,23/02/2023,19.0,20.0,True
+Victor,24/02/2023,19.0,21.0,True
+Yusuf,25/02/2023,8.0,9.0,True
+Apply for cargese workshop,25/02/2023,10.0,11.0,True
+Yusuf,26/02/2023,8.0,9.0,True

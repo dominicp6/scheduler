@@ -1,13 +1,8 @@
-Fokker-Planck equation for Hummer Modification,1,1.2,22/01/2023,research,Overdue
-Gabriel Reading VAMPnet Integration,2,3.2,27/01/2023,reading,In Progress
-Read and understand Matthew's notes,3,4.0,27/01/2023,reading,Not Started
+Read and understand Matthew's notes,1,4.0,24/02/2023,reading,In Progress
 Read paper from reading list,3,12.0,01/03/2023,reading,Not Started
-TICA CV enhanced sampling Deca Alanine,3,4.5,27/01/2023,coding,In Progress
-Periodic table of patterns,2,4.0,01/02/2023,extra,In Progress
 Practice PRISM presentation,2,1.5,20/02/2023,extra,Not Started
-IR Project: Spectra Comparison,2,3.0,20/02/2023,research,Not Started
+IR Project: Spectra Comparison,2,3.0,05/03/2023,research,Not Started
 Literature Review,1,55.0,31/03/2023,writing,Not Started
-Read haematology paper,2,0.5,23/01/2023,reading,Not Started
-Research SHAKE and how it can constrain intermolecular geometries,3,0.5,27/01/2023,reading,Not Started
-Quantifying Uncertainty and Sampling Quality in Biomolecular Simulations,2,1.5,26/01/2023,reading,Not Started
-Best Practices for Quantification of Uncertainty and Sampling Quality in Molecular Simulations,1,1.0,26/01/2023,reading,Not Started
+Research SHAKE and how it can constrain intermolecular geometries,3,0.5,24/02/2023,reading,In Progress
+Quantifying Uncertainty and Sampling Quality in Biomolecular Simulations,2,1.5,24/02/2023,reading,In Progress
+Best Practices for Quantification of Uncertainty and Sampling Quality in Molecular Simulations,1,1.0,26/02/2023,reading,Overdue
